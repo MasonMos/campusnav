@@ -21,23 +21,38 @@ export default function Home() {
   const [foodList, setFoodList] = useState<FoodItem[]>([]);
   const [dailyCalories, setDailyCalories] = useState<number[]>([]);
   const [totalCalories, setTotalCalories] = useState(0);
+  const [chartData, setChartData] = useState({
+    labels: [],
+    datasets: [{ data: [] as number[]}],
+  });
 
   useEffect(() => {
     const initializeDatabase = async () => {
-      await db.withTransactionAsync(async () => {
+      try {
         await db.execAsync(
           "create table if not exists daily_calories (id integer primary key not null, date text, calories integer);"
         );
-        fetchCalories();
-      });
-    };
-
+        await fetchCalories();
+  } catch (error) {
+    console.error("Error initializing database:", error);
+  }
+};
     initializeDatabase();
   }, []);
 
   const fetchCalories = async () => {
-      const calories = await db.execAsync("select * from daily_calories;"); 
-};
+    try {
+        const result: { date: string; calories: number }[] = await db.getAllAsync("SELECT date, calories FROM daily_calories ORDER BY date;");
+        if (result.length > 0) {
+          const labels = result.map((entry: {date: string}) => entry.date);
+          const dataPoints = result.map((entry: {calories: number}) => entry.calories);
+          setChartData({ labels: [] , datasets: [{ data: dataPoints }] });
+        }
+    } catch (error) {
+      console.error("Error fetching calories:", error);
+    }
+  };
+
   const calculateCalories = () => {
     if (weight && age && height && fname) {
       const BMR = 10 * (weight * 0.453592) + 6.25 * (height) - 5 * age + 5;
@@ -63,10 +78,17 @@ export default function Home() {
     }
   };
 
-  const saveCalories = (calories: number) => {
-    const date = new Date().toISOString().split('T')[0]; // Get current date in YYYY-MM-DD format
-    db.execAsync("insert into daily_calories (date, calories) values (?, ?);");
-    };
+  const saveCalories = async (calories: number) => {
+    const date = new Date().toISOString().split('T')[0];
+    try{ // Get current date in YYYY-MM-DD format
+      await db.runAsync("insert into daily_calories (date, calories) values (?, ?);",
+      date,
+      calories
+    );
+  } catch (error) {
+      console.error("Error saving calories:", error);
+    }
+  };
 
   const name = fname;
   const calories = calculateCalories();
@@ -81,26 +103,21 @@ export default function Home() {
       {calories && <Text style={styles.text}>Daily Calorie Intake: {foodCalories.toFixed(2) + " / " + calories.toFixed(2)} kcal</Text>}
       
       <LineChart
-        data={{
-          labels: dailyCalories.map((_, index) => `Day ${index + 1}`),
-          datasets: [
-            {
-              data: dailyCalories,
-            },
-          ],
-        }}
+        data={chartData}
         width={350}
         height={220}
         yAxisLabel=""
         yAxisSuffix=""
+        xAxisLabel=""
         chartConfig={{
           backgroundColor: "#1E2923",
           backgroundGradientFrom: "#1E2923",
           backgroundGradientTo: "#08130D",
-          decimalPlaces: 2,
+          decimalPlaces: 0,
           color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
           labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
           style: {
+            marginVertical: 8,
             borderRadius: 16,
           },
           propsForDots: {
