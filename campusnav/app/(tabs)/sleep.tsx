@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-start",
     alignItems: "center",
-    backgroundColor: "#25292e",
+    backgroundColor: "#FFFFFF",
     paddingTop: 50,
   },
   titleContainer: {
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   text: {
-    color: "#fff",
+    color: "#ADD8E6",
     marginBottom: 10,
   },
   modalView: {

@@ -2,8 +2,8 @@ import { Text, View, StyleSheet, Button, Modal, TextInput } from "react-native";
 import { Link } from "expo-router";
 import { useUserContext } from "../UserContext";
 import { useState, useEffect } from "react";
-import { LineChart } from "react-native-chart-kit";
 import * as SQLite from 'expo-sqlite';
+import { LineChart } from "react-native-chart-kit";
 
 interface FoodItem {
   food: string;
@@ -50,6 +50,15 @@ export default function Home() {
   const calories = calculateCalories();
   const foodCalories = calculateDailyCalories();
 
+  const data = {
+    labels: foodList.map(item => item.food),
+    datasets: [
+      {
+        data: foodList.map(item => item.calories),
+      },
+    ],
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
@@ -61,6 +70,26 @@ export default function Home() {
       {foodList.map((item, index) => (
         <Text key={index} style={styles.text}>{item.food}: {item.calories} kcal</Text>
       ))}
+
+      {/* <LineChart
+        data={data}
+        width={320}
+        height={220}
+        chartConfig={{
+          backgroundColor: "#ffffff",
+          backgroundGradientFrom: "#ffffff",
+          backgroundGradientTo: "#ffffff",
+          decimalPlaces: 2,
+          color: (opacity = 1) => `rgba(0, 0, 255, ${opacity})`,
+          style: {
+            borderRadius: 16,
+          },
+        }}
+        style={{
+          marginVertical: 8,
+          borderRadius: 16,
+        }}
+      /> */}
 
       <Modal
         animationType="slide"
@@ -95,7 +124,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-start",
     alignItems: "center",
-    backgroundColor: "#25292e",
+    backgroundColor: "#FFFFFF",
     paddingTop: 50,
   },
   titleContainer: {
@@ -103,12 +132,12 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   title: {
-    color: "#fff",
+    color: "#ADD8E6",
     fontSize: 24,
     fontWeight: "bold",
   },
   text: {
-    color: "#fff",
+    color: "#ADD8E6",
   },
   modalView: {
     margin: 20,

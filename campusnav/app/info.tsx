@@ -1,8 +1,10 @@
-import { Text, View, StyleSheet, TextInput, Button } from "react-native";
+import { Text, View, StyleSheet, TextInput} from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { Link, useRouter } from "expo-router";
 import { useUserContext } from "./UserContext";
+import { PaperProvider, Button } from "react-native-paper";
+import customLightTheme from './theme';
 
 export default function Info() {
   const router = useRouter();
@@ -30,6 +32,7 @@ export default function Info() {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
+        <PaperProvider theme={customLightTheme}>
         <Text style={styles.nameLabel}>
           First Name:
         </Text>
@@ -86,10 +89,11 @@ export default function Info() {
         >
         </TextInput>
         <Button
-          title="Confirm"
-          color={"black"}
-          onPress={handleConfirm}
-        />
+            onPress={handleConfirm}
+            mode="contained">
+          Confirm
+        </Button>
+        </PaperProvider>
       </SafeAreaView>
     </SafeAreaProvider>
   );
@@ -98,7 +102,7 @@ export default function Info() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#25292e",
+    backgroundColor: "#FFFFFF",
   },
   confirm: {
     color: "black",
@@ -122,7 +126,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   nameLabel: {
-    color: "#fff",
+    color: "black",
     fontSize: 24,
     fontWeight: "bold",
     marginLeft: 30,

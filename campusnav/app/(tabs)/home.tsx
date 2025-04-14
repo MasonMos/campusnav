@@ -102,7 +102,7 @@ export default function Home() {
       </View>
       {calories && <Text style={styles.text}>Daily Calorie Intake: {foodCalories.toFixed(2) + " / " + calories.toFixed(2)} kcal</Text>}
       
-      <LineChart
+      {/* <LineChart
         data={chartData}
         width={350}
         height={220}
@@ -130,7 +130,7 @@ export default function Home() {
           marginVertical: 8,
           borderRadius: 16,
         }}
-      />
+      /> */}
 
       {foodList.map((item, index) => (
         <Text key={index} style={styles.text}>{item.food}: {item.calories} kcal</Text>
@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-start",
     alignItems: "center",
-    backgroundColor: "#25292e",
+    backgroundColor: "#FFFFFF",
     paddingTop: 50,
   },
   titleContainer: {
@@ -177,12 +177,12 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   title: {
-    color: "#fff",
+    color: "#ADD8E6",
     fontSize: 24,
     fontWeight: "bold",
   },
   text: {
-    color: "#fff",
+    color: "#ADD8E6",
   },
   modalView: {
     margin: 20,
